@@ -1,0 +1,157 @@
+<form onsubmit="">
+  <div class="flex justify-between mb-3">
+    <h1 class="text-2xl text-gray-90 font-semibold">
+      Gestor de Transferencias DT
+    </h1>
+    <button
+      type="button"
+      class="px-5 py-2.5 text-sm font-medium text-white bg-[#3666C2] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center"
+      onclick=""
+    >
+      + Nueva Parte
+    </button>
+  </div>
+
+  <div class="mx-auto bg-[#F5F7FA] p-6 mb-5 rounded-lg border border-gray-200">
+    <h1 class="text-xl text-gray-90 font-semibold mb-3">Buscar Partes</h1>
+    <div class="grid gap-6 mb-6 md:grid-cols-4">
+      <div>
+        <label for="ptcode" class="block mb-2 text-sm font-medium text-gray-900"
+          >CÓDIGO PT</label
+        >
+        <input
+          type="text"
+          id="ptcode"
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="Buscar..."
+        />
+      </div>
+
+      <!-- ESTADO -->
+      <div>
+        <label for="status" class="block mb-2 text-sm font-medium text-gray-900"
+          >ESTADO</label
+        >
+        <select
+          id="status"
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        >
+          <option value="" label="Seleccionar estado">Pendiente</option>
+          <option value="Pendiente" label="Pendiente">Pendiente</option>
+          <option value="Rechazado" label="Rechazado">Rechazado</option>
+          <option value="Aprobado" label="Aprobado">Aprobado</option>
+        </select>
+      </div>
+
+      <!-- CENTRO DE COSTO -->
+      <div>
+        <label
+          for="costcenter"
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >CENTRO DE COSTO</label
+        >
+        <input
+          type="text"
+          id="costcenter"
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="Todos"
+        />
+      </div>
+    </div>
+
+    <div class="grid gap-6 mb-6 md:grid-cols-5">
+      <!-- FECHA DESDE -->
+      <div>
+        <label
+          for="dateFrom"
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >FECHA DESDE</label
+        >
+        <input
+          type="date"
+          id="datefrom"
+          max=""
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="DD/MM/AAAA"
+        />
+      </div>
+
+      <!-- FECHA HASTA -->
+      <div>
+        <label
+          for="dateuntil"
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >FECHA HASTA</label
+        >
+        <input
+          type="date"
+          id="dateuntil"
+          max=""
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="DD/MM/AAAA"
+        />
+      </div>
+
+      <!-- MONTO DESDE -->
+      <div>
+        <label
+          for="amountfrom"
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >MONTO DESDE</label
+        >
+        <input
+          type="text"
+          id="amountfrom"
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="0.00"
+        />
+      </div>
+
+      <!-- MONTO HASTA -->
+      <div>
+        <label
+          for="amountuntil"
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >MONTO HASTA</label
+        >
+        <input
+          type="text"
+          id="amountuntil"
+          value=""
+          onchange=""
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="0.00"
+        />
+      </div>
+
+      <!-- botones APROBAR | RECHARZAR -->
+      <div className="grid gap-6 mb-6 md:grid-cols-2">
+        <button
+          type="submit"
+          className="px-3 py-2 text-sm font-medium text-center text-white bg-[#3666C2] rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+        >
+          Buscar
+        </button>
+        <button
+          type="button"
+          onclick=""
+          className="px-3 py-2 text-sm font-medium text-center text-black border border-gray-400 cursor-pointer rounded-lg hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300"
+        >
+          Limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
