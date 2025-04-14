@@ -1,0 +1,10 @@
+<button
+  [ngClass]="{
+    'bg-blue-500 hover:bg-blue-700': color === 'blue',
+    'bg-red-500 hover:bg-red-700': color === 'red',
+    'bg-gray-400 hover:bg-gray-500': color === 'gray',
+  }"
+  (click)="handleClick()"
+>
+  {{ name }}
+</button>

@@ -68,6 +68,7 @@
         </tr>
       </thead>
       <tbody>
+        @for (item of transferService.transferencias; track $index){
         <tr class="bg-white border border-gray-300">
           <td class="w-4 p-4 border border-gray-200">
             <div class="flex items-center">
@@ -82,15 +83,15 @@
           <td
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 text-center whitespace-nowrap border border-gray-200"
-          ></td>
-          <td class="px-6 py-4 border border-gray-200 text-center"></td>
-          <td class="px-6 py-4 border border-gray-200 text-center"></td>
-          <td class="px-6 py-4 border border-gray-200 text-center"></td>
-          <td class="px-6 py-4 border border-gray-200 text-center"></td>
+          >{{ item.codigo }}</td>
+          <td class="px-6 py-4 border border-gray-200 text-center">{{ item.fecha_generacion | formatDate }}</td>
+          <td class="px-6 py-4 border border-gray-200 text-center">{{ item.monto_total }}</td>
+          <td class="px-6 py-4 border border-gray-200 text-center">{{ item.centro_costo }}</td>
+          <td class="px-6 py-4 border border-gray-200 text-center">{{ item.referencia_sap }}</td>
           <td class="text-center">
             <span
               class="text-center text-xs font-semibold px-3 py-2 rounded-3xl border-1"
-            >
+            >{{ item.estado }}
             </span>
           </td>
           <td class="px-6 py-4 text-center">
@@ -108,6 +109,7 @@
             </button>
           </td>
         </tr>
+      }
       </tbody>
     </table>
     <div

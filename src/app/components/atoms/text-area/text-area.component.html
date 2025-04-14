@@ -1,0 +1,11 @@
+<textarea
+[ngClass]="{
+    'text-sm text-gray-500 bg-gray-100': isDisable,
+    'text-sm text-gray-900': !isDisable
+}"
+[name]="tipo"
+[id]="tipo"
+[rows]=3
+[disabled]="isDisable"
+[defaultValue]="detalleTransfer"
+></textarea>

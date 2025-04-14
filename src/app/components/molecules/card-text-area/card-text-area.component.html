@@ -1,0 +1,17 @@
+<div [ngClass]="{ 'px-2': padding }" class="mt-3">
+    <label
+      [attr.for]="tipo"
+      [ngClass]="{ 'px-2': padding }"
+      class="block mb-2 text-sm font-medium text-gray-900"
+    >
+      {{ label }}
+    </label>
+    <textarea
+      [attr.id]="tipo"
+      [disabled]="isDisable"
+      [value]="detalleTransfer"
+      (input)="handleInput($event)"
+      class="block w-full rounded-lg border border-gray-300 p-1"
+    ></textarea>
+  </div>
+  
