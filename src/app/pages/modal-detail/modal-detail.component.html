@@ -1,6 +1,181 @@
-<div class="fixed inset-0 flex items-center justify-center backdrop-blur-[1px]">
+<div class="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2">
+  <div
+    class="bg-gray-100 py-3 px-4 rounded-t-lg flex justify-between items-center"
+  >
+    <h5 class="text-xl font-semibold text-gray-800">
+      Consulta Parte Transferencia
+    </h5>
+    <button
+      type="button"
+      class="text-gray-500 hover:text-gray-700 focus:outline-none"
+      onclick="cerrarModal()"
+    >
+      ← Volver al listado
+    </button>
+  </div>
+  <div class="p-4">
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <h6 class="font-semibold text-gray-700 mb-1">Información General</h6>
+        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+          <div>Código:</div>
+          <div>{{ detalleTransfer?.codigo }}</div>
+          <div>Fecha de generación:</div>
+          <div>{{ detalleTransfer?.fecha_generacion | formatDate }}</div>
+          <div>Estado actual:</div>
+          <div class="font-semibold">{{ detalleTransfer?.estado }}</div>
+          <div>Usuario creador:</div>
+          <div>{{ detalleTransfer?.usuario_creador }}</div>
+          <div>Monto total:</div>
+          <div>
+            {{ detalleTransfer?.monto_total }} {{ detalleTransfer?.moneda }}
+          </div>
+          <div>Moneda:</div>
+          <div>{{ detalleTransfer?.moneda }}</div>
+          <div>Referencia SAP:</div>
+          <div>{{ detalleTransfer?.referencia_sap || "-" }}</div>
+        </div>
+      </div>
+      <div>
+        <h6 class="font-semibold text-gray-700 mb-1">
+          Información de Transferencia
+        </h6>
+        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+          <div>Almacén origen:</div>
+          <div>{{ detalleTransfer?.almacen_origen }}</div>
+          <div>Almacén destino:</div>
+          <div>{{ detalleTransfer?.almacen_destino }}</div>
+          <div>Centro de costo:</div>
+          <div>{{ detalleTransfer?.centro_costo }}</div>
+          <div>Usuario aprobador:</div>
+          <div>{{ detalleTransfer?.usuario_aprobador || "-" }}</div>
+          <div>Fecha de aprobación:</div>
+          <div>{{ detalleTransfer?.fecha_aprobacion || "-" }}</div>
+          <div>Medio de rechazo:</div>
+          <div>{{ detalleTransfer?.medio_rechazo || "-" }}</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h6 class="font-semibold text-gray-700 mb-1">Observaciones</h6>
+      <div class="border border-gray-300 rounded-md p-2 text-sm text-gray-600">
+        {{ detalleTransfer?.observaciones || "-" }}
+      </div>
+    </div>
+    <div class="mt-4">
+      <h6 class="font-semibold text-gray-700 mb-1">Log de Integración:</h6>
+      <div class="border border-gray-300 rounded-md p-2 text-sm text-gray-600">
+        {{ detalleTransfer?.log_detalle || "-" }}
+      </div>
+    </div>
+  </div>
+  <div class="bg-gray-100 py-3 px-4 rounded-b-lg flex justify-end space-x-2">
+    <button
+      type="button"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Aprobar
+    </button>
+    <button
+      type="button"
+      class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      onclick="cerrarModal()"
+    >
+      Rechazar
+    </button>
+    <button
+      type="button"
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      onclick="cerrarModal()"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>
+<!-- <div class="fixed inset-0 flex items-center justify-center backdrop-blur-[1px]">
   <div class="w-full sm:max-w-xl md:max-w-lg lg:max-w-4xl px-7 overflow-auto">
+    <div
+      class="flex items-center py-2 bg-gray-100 border-gray-200 rounded-t-lg"
+    >
+      <div>
+        <h1 class="text-xl font-bold">Consulta Parte Transferencia</h1>
+        <p class="text-gray-600">Código PT:{{ detalleTransfer.codigo }}</p>
+      </div>
+      <div class="ml-auto">
+        <button
+          class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded text-sm"
+          routerLink="/"
+          onclick="cerrarModal()"
+        >
+          ← Volver al listado
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-blue-500 rounded">
+      <h1 class="text-xl font-bold text-white px-2">
+        Registro de Parte de Transferencia
+      </h1>
+    </div>
+
+    <div class="p-4 grid grid-cols-2 gap-4 text-sm text-gray-700">
+      <div>
+        <h2 class="font-semibold text-gray-900 mb-2">Información General</h2>
+        <div class="grid grid-cols-2 font-light">
+          <div>
+            <p class="p-[0.2px]">ID:</p>
+            <p class="p-[1px]">Fecha de generación:</p>
+            <p class="p-[1px]">Estado actual:</p>
+            <p class="p-[1px]">Usuario creador:</p>
+            <p class="p-[1px]">Monto total:</p>
+            <p class="p-[1px]">Moneda:</p>
+            <p class="p-[1px]">Referencia SAP:</p>
+          </div>
+          <div class="font-medium font-sans">
+            <p class="p-[0.9px]">{{ detalleTransfer.codigo }}</p>
+            <p class="p-[1px]">dateCreate</p>
+            <p class="p-[1px]">{{ detalleTransfer.estado }}</p>
+            <p class="p-[1px]">{{ detalleTransfer.usuario_creador }}</p>
+            <p class="p-[1px]">S/ {{ detalleTransfer.monto_total }}</p>
+            <p class="p-[1px]">{{ detalleTransfer.moneda }}</p>
+            <p class="p-[1px]">{{ detalleTransfer.referencia_sap || "-" }}</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2 class="font-semibold text-gray-900 mb-2">
+          Información de Transferencia
+        </h2>
+        <div class="grid grid-cols-2 font-light">
+          <div>
+            <p class="p-[1px]">Almacén origen:</p>
+            <p class="p-[1px]">Almacén destino:</p>
+            <p class="p-[1px]">Centro de costo:</p>
+            <p class="p-[1px]">Usuario aprobador:</p>
+            <p class="p-[1px]">Fecha de aprobación:</p>
+            <p class="p-[1px]">Motivo de rechazo:</p>
+          </div>
+          <div class="font-medium font-sans">
+            <p class="p-[1px]">{{ detalleTransfer.almacen_origen }}</p>
+            <p class="p-[1px]">{{ detalleTransfer.almacen_destino }}</p>
+            <p class="p-[1px]">
+              {{ detalleTransfer.centro_costo || "-" }}
+            </p>
+            <p class="p-[1px]">
+              {{ detalleTransfer.usuario_aprobador || "-" }}
+            </p>
+            <p class="p-[1px]">
+              {{ detalleTransfer.fecha_aprobacion || "-" }}
+            </p>
+            <p class="p-[1px] break-words text-[11px]">
+              {{ detalleTransfer.motivo_rechazo || "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="bg-gray-200 shadow-lg pb-5"></div>
     <div class="flex justify-center space-x-4 relative -top-3"></div>
   </div>
-</div>
+</div> -->

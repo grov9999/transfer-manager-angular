@@ -70,7 +70,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of filtro; track $index){
+        @for (item of pagedFiltro; track $index){
         <tr class="bg-white border border-gray-300">
           <td class="w-4 p-4 border border-gray-200">
             <div class="flex items-center">
@@ -91,23 +91,29 @@
             {{ item.fecha_generacion | formatDate }}
           </td>
           <td class="px-6 py-4 border border-gray-200 text-center">
-            {{ item.monto_total }}
+            {{ item.monto_total ? item.monto_total:'--'}}
           </td>
           <td class="px-6 py-4 border border-gray-200 text-center">
-            {{ item.centro_costo }}
+            {{ item.centro_costo ? item.centro_costo:'--'}}
           </td>
           <td class="px-6 py-4 border border-gray-200 text-center">
-            {{ item.referencia_sap }}
+            {{ item.referencia_sap ? item.referencia_sap: '--'}}
           </td>
           <td class="text-center">
             <span
               class="text-center text-xs font-semibold px-3 py-2 rounded-3xl border-1"
+              [ngClass]="{
+                'bg-[#FEF8E3] text-yellow-500': item.estado == 'Pendiente',
+                'bg-[#EAF5EA] text-green-500': item.estado == 'Aprobado',
+                'bg-[#FCECEE] text-red-500': item.estado == 'Rechazado',
+              }"
               >{{ item.estado }}
             </span>
           </td>
           <td class="px-6 py-4 text-center">
             <button
-              type="submit"
+              type="button"
+              (click)="abrirModal(item)"
               class="px-3 py-2 mr-2 text-xs font-medium text-center text-white bg-[#3666C2] rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer"
             >
               V
@@ -123,41 +129,94 @@
         }
       </tbody>
     </table>
+
+    <div
+      id="detalleModal"
+      class="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 hidden items-center justify-center"
+    >
+      <app-modal-detail
+        [detalleTransfer]="detalleSeleccionado"
+      ></app-modal-detail>
+    </div>
+
     <div
       class="flex-wrap justify-center border border-gray-200 bg-[#F5F7FA] mt-5 py-3 pl-3"
     >
       <button
-        class="px-5 mr-3 py-2.5 text-sm font-medium text-white rounded-lg bg-gray-400"
+        class="px-5 mr-3 py-2.5 text-sm font-medium text-white rounded-lg bg-[#3666C2] hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer"
       >
         Aprobar
       </button>
       <button
-        class="px-5 py-2.5 text-sm font-medium text-white rounded-lg bg-gray-400"
+        class="px-5 py-2.5 text-sm font-medium text-white rounded-lg bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer"
       >
         Rechazar
       </button>
     </div>
-    <!-- PAGINACIÓN -->
+
     <nav
       class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
       aria-label="Table navigation"
     >
       <span
-        class="text-sm font-normal text-gray-50 mb-4 md:mb-0 block w-full md:inline md:w-auto"
+        class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto"
       >
-        Showing <span class="font-semibold text-gray-50">1-4</span>
+        Mostrando
+        <span class="font-semibold">{{ startIndex + 1 }}-{{ endIndex }}</span>
+        de
+        <span class="font-semibold">{{ totalItems }}</span>
       </span>
-      <ul>
+      <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
         <li>
           <button
-            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
-          ></button>
+            (click)="goToPage(1)"
+            [disabled]="currentPage === 1"
+            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            <<
+          </button>
         </li>
-        <button class=""></button>
         <li>
           <button
-            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-          ></button>
+            (click)="previousPage()"
+            [disabled]="currentPage === 1"
+            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            <
+          </button>
+        </li>
+        @for (page of pages; track $index) {
+        <li>
+          <button
+            (click)="goToPage(page)"
+            [ngClass]="{
+              'bg-blue-500 text-white hover:bg-blue-600': currentPage === page,
+              'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700':
+                currentPage !== page
+            }"
+            class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 focus:outline-none"
+          >
+            {{ page }}
+          </button>
+        </li>
+        }
+        <li>
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            >
+          </button>
+        </li>
+        <li>
+          <button
+            (click)="goToPage(totalPages)"
+            [disabled]="currentPage === totalPages"
+            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            >>
+          </button>
         </li>
       </ul>
     </nav>

@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component,Output, EventEmitter } from '@angular/core';
+import { FormsModule,NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { FilterService } from '../../../services/filter.service';
 
 @Component({
   selector: 'app-transfer-search',
@@ -10,11 +9,55 @@ import { FilterService } from '../../../services/filter.service';
   styleUrl: './transfer-search.component.css'
 })
 export class TransferSearchComponent {
+  codigo = '';
+  estado = '';
+  centroCostoFiltro = '';
+  montoDesdeFiltro = '';
+  montoHastaFiltro = '';
+  fechaDesdeFiltro: string | null = null;
+  fechaHastaFiltro: string | null = null;
 
-  constructor(private busquedaService: FilterService) {}
+  @Output() searchCriteriaChanged = new EventEmitter<{
+    codigo: string;
+    estado: string;
+    centroCosto: string;
+    montoDesde: string;
+    montoHasta: string;
+    fechaDesde: string | null;
+    fechaHasta: string | null;
+  }>();
 
-  buscarCosto(valor: string): void {
-    this.busquedaService.actualizarTerminoBusqueda(valor);
+  emitSearchCriteria(): void {
+    this.searchCriteriaChanged.emit({
+      codigo: this.codigo,
+      estado: this.estado,
+      centroCosto: this.centroCostoFiltro,
+      montoDesde: this.montoDesdeFiltro,
+      montoHasta: this.montoHastaFiltro,
+      fechaDesde: this.fechaDesdeFiltro,
+      fechaHasta: this.fechaHastaFiltro,
+    });
+  }
 
+  // Puedes llamar a emitSearchCriteria() en los eventos de los inputs
+  onCodigoInput(): void {
+    this.emitSearchCriteria();
+  }
+
+  onEstadoChange(): void {
+    this.emitSearchCriteria();
+  }
+
+  // ... y así sucesivamente para los demás campos ...
+
+  onLimpiarFiltros(): void {
+    this.codigo = '';
+    this.estado = '';
+    this.centroCostoFiltro = '';
+    this.montoDesdeFiltro = '';
+    this.montoHastaFiltro = '';
+    this.fechaDesdeFiltro = null;
+    this.fechaHastaFiltro = null;
+    this.emitSearchCriteria(); // Emitir criterios vacíos para mostrar todos los resultados
   }
 }

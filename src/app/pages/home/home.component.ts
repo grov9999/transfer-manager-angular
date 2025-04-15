@@ -7,7 +7,7 @@ import { NavComponent } from '../../components/atoms/nav/nav.component';
 
 @Component({
   selector: 'app-home',
-  imports: [TransferSearchComponent, TransferTableComponent,NavComponent],
+  imports: [TransferSearchComponent, TransferTableComponent, NavComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -30,5 +30,4 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-
 }
