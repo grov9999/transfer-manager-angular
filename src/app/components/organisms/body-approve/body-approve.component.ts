@@ -13,6 +13,5 @@ export class BodyApproveComponent {
   handleButtonClick() {
     this.buttonClicked = true;
     console.log('Button in parent component was clicked!');
-    // Add your logic here
   }
 }

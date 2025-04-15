@@ -12,7 +12,7 @@ import { NavComponent } from '../../components/atoms/nav/nav.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-
+  ptcodeFilter: string = '';
   constructor(public transferService: TransferService) {}
 
   ngOnInit(): void {
@@ -31,16 +31,4 @@ export class HomeComponent implements OnInit {
     });
   }
 
-
-  // deleteTransfer(id: string):void {
-  //   this.transferService.deleteTransfer(id).subscribe({
-  //     next:() => {
-  //       console.log('Transferencia eliminada');
-  //     },
-  //     error:(err) => {
-  //       console.log(err);
-
-  //     },
-  //   })
-  // }
 }

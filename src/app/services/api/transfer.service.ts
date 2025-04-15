@@ -1,38 +1,19 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IAlmacen, ResAlmacen } from '../../interfaces/IAlmacen';
 import {
   IListDetalleTransferencia,
   ResTransferencia,
 } from '../../interfaces/IListDetalleTransferencia';
-import { map, Observable } from 'rxjs';
-import { IAlmacen } from '../../interfaces/IAlmacen';
+import { ITransferReq } from '../../interfaces/ITransferCreate';
 
-interface Transferencia {
-  resultado_pt_id: number;
-  codigo: string;
-  fecha_generacion: string;
-  almacen_origen: string;
-  almacen_destino: string;
-  monto_total: string;
-  moneda: string;
-  estado: string;
-  usuario_creador: string;
-  usuario_aprobador: string | null;
-  fecha_aprobacion: string | null;
-  motivo_rechazo: string | null;
-  referencia_sap: string | null;
-  observaciones: string;
-  log_accion: string;
-  log_usuario: string;
-  log_fecha: string;
-  centro_costo: string;
+interface postTransferencia {
   almacen_origen_id: number;
   almacen_destino_id: number;
+  monto_total: string;
   usuario_creador_id: number;
-}
-
-interface ApiResponse {
-  data: Transferencia[];
+  centro_costo: string;
 }
 
 @Injectable({
@@ -42,37 +23,42 @@ export class TransferService {
   readonly apiUrl = 'http://localhost:3000/api';
 
   transferencias: IListDetalleTransferencia[];
+  almacenes: IAlmacen[];
 
   constructor(private http: HttpClient) {
-    this.transferencias = []
+    this.transferencias = [];
+    this.almacenes = [];
   }
 
-
-  // getTransfer(): Observable<ResTransferencia> {
-  //   return this.http.get<ResTransferencia>(`${this.apiUrl}/transfers`);
-  // }
-
-  // getAlmacenes() {
-  //   return this.http.get<IAlmacen[]>(`${this.apiUrl}/almacenes`);
-  // }
-
-  getAll(): Observable<IListDetalleTransferencia[]> {
-    return this.http.get<IListDetalleTransferencia[]>(`${this.apiUrl}/transfers`);
+  getTransfer(): Observable<ResTransferencia> {
+    return this.http.get<ResTransferencia>(`${this.apiUrl}/transfers`);
   }
 
-  // getById(id: number): Observable<Transferencia> {
-  //   return this.http.get<Transferencia>(`${this.apiUrl}/${id}`);
-  // }
+  getTransferId(id: string): Observable<ResTransferencia> {
+    return this.http.get<ResTransferencia>(`${this.apiUrl}/transfer/${id}`);
+  }
 
-  // create(data: Omit<Transferencia, 'resultado_pt_id'>): Observable<Transferencia> {
-  //   return this.http.post<Transferencia>(this.apiUrl, data);
-  // }
+  getAlmacenes(): Observable<ResAlmacen> {
+    return this.http.get<ResAlmacen>(`${this.apiUrl}/almacenes`);
+  }
 
-  // update(id: number, data: Transferencia): Observable<Transferencia> {
-  //   return this.http.put<Transferencia>(`${this.apiUrl}/${id}`, data);
-  // }
+  postTranfer(data: ITransferReq): Observable<ResTransferencia> {
+    return this.http.post<ResTransferencia>(`${this.apiUrl}/transfer`, data);
+  }
 
-  // delete(id: number): Observable<any> { // La respuesta de eliminación puede variar
-  //   return this.http.delete(`${this.apiUrl}/${id}`);
-  // }
+  deleteTransfer(id: string): Observable<ResTransferencia> {
+    return this.http.patch<ResTransferencia>(
+      `${this.apiUrl}/transfer/${id}`,
+      null
+    );
+  }
+
+  postUpdateTranfer(
+    data: IListDetalleTransferencia[]
+  ): Observable<ResTransferencia> {
+    return this.http.post<ResTransferencia>(
+      `${this.apiUrl}/updateStatus`,
+      data
+    );
+  }
 }

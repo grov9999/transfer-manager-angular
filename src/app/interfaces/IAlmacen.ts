@@ -3,4 +3,8 @@ export interface IAlmacen {
     nombre: string;
     ubicacion: string;
   }
+
+  export interface ResAlmacen {
+    data: IAlmacen[];
+  }
   

@@ -1,56 +1,3 @@
-<!-- <div class="flex justify-between mb-3">
-  <div>
-    <h1 class="text-2xl text-gray-90 font-semibold">
-      Registro parte Transferencia
-    </h1>
-  </div>
-  <div>
-    <button
-      onclick=""
-      class="bg-gray-100 text-xs text-black p-1 rounded-sm border border-gray-400 cursor-pointer"
-      routerLink="/"
-    >
-      ←⇐ Volver al listado
-    </button>
-  </div>
-</div>
-<div>
-  <div class="bg-[#0B5DB4] p-3">
-    <h2 class="text-white">Registro de Parte de Transferencia</h2>
-  </div>
-  <div class="w-full p-3 border border-gray-300">
-    <form onsubmit="" class="w-full">
-      <div class="w-[90%] flex gap-x-10">
-        <div class="w-1/2">
-          <div class="border-b-1 border-b-gray-200 mb-5">
-            <h3>Informacion General</h3>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-center gap-x-3 mt-5">
-        <div>
-          <input
-            type="submit"
-            id="guardar"
-            value=""
-            class="bg-[#0B5DB4] text-white p-3 rounded-sm cursor-pointer"
-          />
-        </div>
-        <div>
-          <button
-            id="cancelar"
-            class="bg-red-500 text-white p-3 rounded-sm cursor-pointer"
-            onclick=""
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div> -->
-
-<!-- <app-main-layout> -->
 <div class="container mx-auto">
   <app-nav></app-nav>
   <div class="flex justify-between mb-3">
@@ -73,7 +20,7 @@
       <h2 class="text-white">Registro de Parte de Transferencia</h2>
     </div>
     <div class="w-full p-3 border border-gray-300">
-      <form class="w-full">
+      <form class="w-full" #form="ngForm" (ngSubmit)="postTransfer(form)">
         <div class="w-[90%] flex gap-x-10">
           <div class="w-1/2">
             <div class="border-b-1 border-b-gray-200 mb-5">
@@ -90,7 +37,7 @@
                   type="text"
                   id="id"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Autogenerado"
                 />
               </div>
@@ -106,7 +53,7 @@
                   type="text"
                   id="fecha"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Autogenerado"
                 />
               </div>
@@ -122,7 +69,7 @@
                   type="text"
                   id="estado"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Pendiente"
                 />
               </div>
@@ -138,8 +85,8 @@
                   type="text"
                   id="usuario_creador_id"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-yellow-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="Juan Pérez"
                 />
               </div>
             </div>
@@ -153,10 +100,19 @@
                 <input
                   type="text"
                   id="monto_total"
-                  disabled="true"
+                  name="monto_total"
                   class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  placeholder=""
+                  [(ngModel)]="nuevaTransferencia.monto_total"
+                  #monto="ngModel"
+                  required
+                  min="1"
                 />
+                @if (monto.invalid && monto.touched) {
+                  <p class="text-red-500">Monto total es requerido</p>
+                } @else if (monto.hasError("min") && monto.touched) {
+                  <p class="text-red-500">Monto total no puede ser cero</p>
+                }
               </div>
             </div>
             <div class="mb-5 flex">
@@ -170,7 +126,7 @@
                   type="text"
                   id="moneda"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="PEN"
                 />
               </div>
@@ -186,8 +142,8 @@
                   type="text"
                   id="sap"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="-"
                 />
               </div>
             </div>
@@ -203,31 +159,40 @@
                 >Almacen origen:</label
               >
               <div class="w-full">
-                <input
-                  type="text"
-                  id="id"
-                  disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
-                />
+                <select
+                  name="almacen_origen"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  [(ngModel)]="nuevaTransferencia.almacen_origen_id"
+                >
+                  @for (item of transferService.almacenes; track $index) {
+                  <!-- <option [value]="">Selecciona un almacen:</option> -->
+                  <option [value]="item.id">
+                    {{ item.nombre }}
+                  </option>
+                  }
+                </select>
               </div>
-              
             </div>
 
             <div class="mb-5 flex">
               <label
                 for="id"
                 class="block mb-2 text-sm font-medium text-gray-900 w-1/2"
-                >id</label
+                >Almacen Destino:</label
               >
               <div class="w-full">
-                <input
-                  type="text"
-                  id="id"
-                  disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
-                />
+                <select
+                  name="almacen_destino_id"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  [(ngModel)]="nuevaTransferencia.almacen_destino_id"
+                >
+                  @for (item of transferService.almacenes; track $index) {
+                  <!-- <option [value]="">Selecciona un almacen:</option> -->
+                  <option [value]="item.id">
+                    {{ item.nombre }}
+                  </option>
+                  }
+                </select>
               </div>
             </div>
             <div class="mb-5 flex">
@@ -240,10 +205,16 @@
                 <input
                   type="text"
                   id="centro_costo"
-                  disabled="true"
+                  name="centro_costo"
                   class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  placeholder=""
+                  [(ngModel)]="nuevaTransferencia.centro_costo"
+                  #costo="ngModel"
+                  required
                 />
+                @if (costo.invalid && costo.touched) {
+                  <p class="text-red-500">Centro costo es requerido</p>
+                }
               </div>
             </div>
             <div class="mb-5 flex">
@@ -257,8 +228,8 @@
                   type="text"
                   id="aprobador"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="-"
                 />
               </div>
             </div>
@@ -273,8 +244,8 @@
                   type="text"
                   id="aprobacion"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Autogenerado"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="-"
                 />
               </div>
             </div>
@@ -289,39 +260,47 @@
                   type="text"
                   id="rechazo"
                   disabled="true"
-                  class="shadow-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="shadow-xs bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="-"
                 />
               </div>
             </div>
           </div>
         </div>
-        <div class="mt-3">
-          <label for="" class="block mb-2 text-sm font-medium text-gray-900"></label>
-          <textarea name="" id="">
-
-          </textarea>
+        <div class="px-2 mt-3">
+          <label
+            for="observaciones"
+            class="block mb-2 text-sm font-medium text-gray-900 px-2"
+            >Observaciones</label
+          >
+          <textarea disabled="true"> </textarea>
         </div>
-        <div>
-          <label for="" class="block mb-2 text-sm font-medium text-gray-900 "></label>
-          <textarea name="" id="">
-
-          </textarea>
+        <div class="px-2 mt-3">
+          <label
+            for="log"
+            class="block mb-2 text-sm font-medium text-gray-900 px-2"
+            >Log de Integración</label
+          >
+          <textarea disabled="true"> </textarea>
         </div>
         <div class="flex justify-center gap-x-3 mt-5">
           <div>
-            <input
+            <button
               type="submit"
               id="guardar"
               value="Guardar"
-              class="bg-[#0B5DB4] text-white p-3 rounded-sm cursor-pointer"
-            />
+              [disabled]="!form.valid"
+              [ngClass]="form.valid ? 'bg-[#0B5DB4]' : 'bg-gray-400'"
+              class="text-white p-3 rounded-sm cursor-pointer"
+            >
+              Guardar
+            </button>
           </div>
           <div>
             <button
               id="cancelar"
               class="bg-red-500 text-white p-3 rounded-sm cursor-pointer"
-              onClick={handleHome}
+              routerLink="/"
             >
               Cancelar
             </button>
@@ -331,37 +310,3 @@
     </div>
   </div>
 </div>
-<!-- </app-main-layout> -->
-
-
-<!-- <ul class="user-list">
-  @for (item of transferService.transferencias; track $index) {
-    <li class="user-item">
-      <div>
-        <h3 class="user-name">{{ item.resultado_pt_id }}</h3>
-        <h3 class="user-name">{{ item.codigo }}</h3>
-        <h3 class="user-name">{{ item.fecha_generacion }}</h3>
-        <h3 class="user-name">{{ item.almacen_origen }}</h3>
-        <h3 class="user-name">{{ item.almacen_destino }}</h3>
-        <h3 class="user-name">{{ item.monto_total }}</h3>
-        <h3 class="user-name">{{ item.moneda }}</h3>
-        <h3 class="user-name">{{ item.estado }}</h3>
-        <h3 class="user-name">{{ item.usuario_creador }}</h3>
-        <h3 class="user-name">{{ item.usuario_aprobador }}</h3>
-        <h3 class="user-name">{{ item.fecha_generacion }}</h3>
-        <h3 class="user-name">{{ item.motivo_rechazo }}</h3>
-        <h3 class="user-name">{{ item.referencia_sap }}</h3>
-        <h3 class="user-name">{{ item.observaciones }}</h3>
-        <h3 class="user-name">{{ item.log_accion }}</h3>
-        <h3 class="user-name">{{ item.log_usuario }}</h3>
-        <h3 class="user-name">{{ item.log_fecha }}</h3>
-        <h3 class="user-name">{{ item.log_detalle }}</h3>
-        <h3 class="user-name">{{ item.centro_costo }}</h3>
-        <h3 class="user-name">{{ item.almacen_origen_id }}</h3>
-        <h3 class="user-name">{{ item.almacen_destino_id }}</h3>
-        <h3 class="user-name">{{ item.usuario_creador_id }}</h3>
-        <h3 class="user-name">{{ item.usuario_aprobador_id }}</h3>
-      </div>
-    </li>
-  }
-</ul> -->
