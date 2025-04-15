@@ -1,26 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IListDetalleTransferencia,
   ResTransferencia,
 } from '../../../interfaces/IListDetalleTransferencia';
+import { ModalDetailComponent } from '../../../pages/modal-detail/modal-detail.component';
 import { TransferService } from '../../../services/api/transfer.service';
 import { CustomDateFormatPipe } from '../../../utils/formatDate';
-import { ModalDetailComponent } from "../../../pages/modal-detail/modal-detail.component";
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-transfer-table',
-  imports: [CustomDateFormatPipe, FormsModule, ModalDetailComponent,CommonModule],
+  imports: [
+    CustomDateFormatPipe,
+    FormsModule,
+    ModalDetailComponent,
+    CommonModule,
+  ],
   templateUrl: './transfer-table.component.html',
   styleUrl: './transfer-table.component.css',
 })
 export class TransferTableComponent implements OnInit {
-
   constructor(public transferService: TransferService) {}
   filtro: IListDetalleTransferencia[] = [];
   pagedFiltro: IListDetalleTransferencia[] = [];
-  codigoFiltro = '';
+  codigoFiltro: string = '';
 
   pageSize = 5;
   currentPage = 1;
@@ -32,6 +36,7 @@ export class TransferTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTransfer();
+
     (window as any).abrirModal = this.abrirModal.bind(this);
     (window as any).cerrarModal = this.cerrarModal.bind(this);
   }
@@ -73,8 +78,8 @@ export class TransferTableComponent implements OnInit {
           this.getTransfer();
         },
         error: (err) => {
-          console.log('Error al eliminar la transferencia:', err);
-          window.alert('Error al eliminar la transferencia!');
+          console.log('Error:', err);
+          window.alert('Error al eliminar la transferencia');
         },
       });
     }
@@ -82,10 +87,81 @@ export class TransferTableComponent implements OnInit {
 
   detalleSeleccionado: any = null;
 
-  // mostrarDetalle(item: any) {
-  //   this.detalleSeleccionado = item;
-  //   console.log('Item seleccionado:', this.detalleSeleccionado);
-  // }
+  onSelect(event: Event, item: any): void {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (checkbox.checked) {
+      this.detalleSeleccionado = item;
+      console.log('Item seleccionado:', this.detalleSeleccionado);
+    } else {
+      this.detalleSeleccionado = null;
+      console.log('Item deseleccionado');
+    }
+  }
+
+  aprobarTransferencia(): void {
+    if (!this.detalleSeleccionado) {
+      console.log('No hay transferencia seleccionada.');
+      return;
+    }
+    const body = {
+      pt_id: this.detalleSeleccionado.resultado_pt_id,
+      estado: 'Aprobado',
+      usuario_aprobador_id: 2,
+      motivo_rechazo: '',
+      referencia_sap: '',
+    };
+
+    console.log('Body a enviar:', body);
+
+    this.postApproveTransfer(body);
+  }
+
+  rechazarTransferencia(): void {
+    if (!this.detalleSeleccionado) {
+      console.log('No hay transferencia seleccionada.');
+      return;
+    }
+    const body = {
+      pt_id: this.detalleSeleccionado.resultado_pt_id,
+      estado: 'Rechazado',
+      usuario_aprobador_id: 2,
+      motivo_rechazo: 'Motivo de rechazo',
+      referencia_sap: '',
+    };
+
+    console.log('Body a enviar:', body);
+
+    this.postRejectTransfer(body);
+  }
+
+  postApproveTransfer(body: any): void {
+    this.transferService.postUpdateTranfer([body]).subscribe({
+      next: (res: ResTransferencia) => {
+        console.log('Aprobado:', res.data);
+        window.alert('Transferencia aprobada con éxito!');
+        this.getTransfer();
+      },
+      error: (err) => {
+        console.log('Error:', err);
+        window.alert('Error al aprobar la transferencia!');
+      },
+    });
+  }
+
+  postRejectTransfer(body: any): void {
+    this.transferService.postUpdateTranfer([body]).subscribe({
+      next: (res: ResTransferencia) => {
+        console.log('Rechazado:', res.data);
+        window.alert('Transferencia rechazada con éxito!');
+        this.getTransfer();
+      },
+      error: (err) => {
+        console.log('Error:', err);
+        window.alert('Error al rechazar la transferencia!');
+      },
+    });
+  }
 
   abrirModal(item: any) {
     this.detalleSeleccionado = item;
@@ -102,7 +178,6 @@ export class TransferTableComponent implements OnInit {
       this.detalleSeleccionado = null;
     }
   }
-
 
   calculateTotalPages(): void {
     this.totalPages = Math.ceil(this.totalItems / this.pageSize);

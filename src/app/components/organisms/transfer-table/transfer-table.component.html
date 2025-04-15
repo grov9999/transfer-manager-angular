@@ -76,6 +76,7 @@
             <div class="flex items-center">
               <input
                 type="checkbox"
+                (change)="onSelect($event,item)"
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
               />
               <label for="" class="sr-only"> checkbox </label>
@@ -143,11 +144,13 @@
       class="flex-wrap justify-center border border-gray-200 bg-[#F5F7FA] mt-5 py-3 pl-3"
     >
       <button
+        (click)="aprobarTransferencia()"
         class="px-5 mr-3 py-2.5 text-sm font-medium text-white rounded-lg bg-[#3666C2] hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer"
       >
         Aprobar
       </button>
       <button
+        (click)="rechazarTransferencia()"
         class="px-5 py-2.5 text-sm font-medium text-white rounded-lg bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer"
       >
         Rechazar
