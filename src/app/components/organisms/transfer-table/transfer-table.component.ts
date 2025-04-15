@@ -8,6 +8,7 @@ import {
 import { ModalDetailComponent } from '../../../pages/modal-detail/modal-detail.component';
 import { TransferService } from '../../../services/api/transfer.service';
 import { CustomDateFormatPipe } from '../../../utils/formatDate';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-transfer-table',
@@ -16,6 +17,7 @@ import { CustomDateFormatPipe } from '../../../utils/formatDate';
     FormsModule,
     ModalDetailComponent,
     CommonModule,
+    RouterLink,
   ],
   templateUrl: './transfer-table.component.html',
   styleUrl: './transfer-table.component.css',
@@ -25,6 +27,10 @@ export class TransferTableComponent implements OnInit {
   filtro: IListDetalleTransferencia[] = [];
   pagedFiltro: IListDetalleTransferencia[] = [];
   codigoFiltro: string = '';
+  codigoBuscar: string = '';
+  centroBuscar: string = '';
+  montoDesdeBuscar: string = '';
+  montoHastaBuscar: string = '';
 
   pageSize = 5;
   currentPage = 1;
@@ -47,6 +53,7 @@ export class TransferTableComponent implements OnInit {
         this.transferService.transferencias = res.data;
         this.getTransferFilter();
         this.filterAndPaginate();
+        this.buscarDetalle();
         console.log('data:', this.transferService.transferencias);
       },
       error: (err: ResTransferencia) => {
@@ -64,101 +71,136 @@ export class TransferTableComponent implements OnInit {
     this.filtro = this.transferService.transferencias.filter((item) =>
       item.codigo.toLowerCase().includes(this.codigoFiltro.toLowerCase())
     );
+    this.updatePagination();
+  }
+
+  buscar(): void {
+    this.currentPage = 1;
+    this.buscarDetalle();
+  }
+
+  buscarDetalle(): void {
+    this.filtro = this.transferService.transferencias.filter((item) => {
+      const codigo =
+        this.codigoBuscar.trim() === '' ||
+        item.codigo.toLowerCase().includes(this.codigoBuscar.toLowerCase());
+
+      const centroCosto =
+        this.centroBuscar.trim() === '' ||
+        (item.centro_costo &&
+          item.centro_costo
+            .toLowerCase()
+            .includes(this.centroBuscar.toLowerCase()));
+      const montoTotal = Number(item.monto_total);
+      const montoDesde =
+        this.montoDesdeBuscar.trim() === '' ||
+        montoTotal >= parseFloat(this.montoDesdeBuscar);
+      const montoHasta =
+        this.montoHastaBuscar.trim() === '' ||
+        montoTotal <= parseFloat(this.montoHastaBuscar);
+
+      return codigo && centroCosto && montoDesde && montoHasta;
+    });
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
     this.totalItems = this.filtro.length;
     this.calculateTotalPages();
     this.updatePagedFiltro();
   }
 
-  deleteTransfer(id: string) {
-    if (window.confirm('¿Estás seguro de eliminar la transferencia?')) {
-      this.transferService.deleteTransfer(id).subscribe({
-        next: (res) => {
-          console.log('Transferencia eliminada:', res.data);
-          window.alert('Transferencia eliminada con éxito!');
-          this.getTransfer();
-        },
-        error: (err) => {
-          console.log('Error:', err);
-          window.alert('Error al eliminar la transferencia');
-        },
-      });
-    }
-  }
+  // deleteTransfer(id: string) {
+  //   if (window.confirm('¿Estás seguro de eliminar la transferencia?')) {
+  //     this.transferService.deleteTransfer(id).subscribe({
+  //       next: (res) => {
+  //         console.log('Transferencia eliminada:', res.data);
+  //         window.alert('Transferencia eliminada con éxito!');
+  //         this.getTransfer();
+  //       },
+  //       error: (err) => {
+  //         console.log('Error:', err);
+  //         window.alert('Error al eliminar la transferencia');
+  //       },
+  //     });
+  //   }
+  // }
 
   detalleSeleccionado: any = null;
+  detallesSeleccionados: any[] = [];
 
   onSelect(event: Event, item: any): void {
     const checkbox = event.target as HTMLInputElement;
-
     if (checkbox.checked) {
-      this.detalleSeleccionado = item;
-      console.log('Item seleccionado:', this.detalleSeleccionado);
+      this.detallesSeleccionados.push(item);
     } else {
-      this.detalleSeleccionado = null;
-      console.log('Item deseleccionado');
+      this.detallesSeleccionados = this.detallesSeleccionados.filter(
+        (selected) => selected.codigo !== item.codigo
+      );
     }
+    console.log('Filas seleccionadas:', this.detallesSeleccionados);
   }
 
-  aprobarTransferencia(): void {
-    if (!this.detalleSeleccionado) {
-      console.log('No hay transferencia seleccionada.');
+  aprobarTransferencias(): void {
+    if (this.detallesSeleccionados.length === 0) {
+      console.log('No hay transferencias seleccionadas.');
       return;
     }
-    const body = {
-      pt_id: this.detalleSeleccionado.resultado_pt_id,
+    const bodies = this.detallesSeleccionados.map((item) => ({
+      pt_id: item.resultado_pt_id,
       estado: 'Aprobado',
       usuario_aprobador_id: 2,
       motivo_rechazo: '',
       referencia_sap: '',
-    };
+    }));
 
-    console.log('Body a enviar:', body);
-
-    this.postApproveTransfer(body);
+    console.log('body :', bodies);
+    this.postApproveTransfer(bodies);
   }
 
-  rechazarTransferencia(): void {
-    if (!this.detalleSeleccionado) {
-      console.log('No hay transferencia seleccionada.');
+  rechazarTransferencias(): void {
+    if (this.detallesSeleccionados.length === 0) {
+      console.log('No hay transferencias seleccionadas.');
       return;
     }
-    const body = {
-      pt_id: this.detalleSeleccionado.resultado_pt_id,
+    const bodies = this.detallesSeleccionados.map((item) => ({
+      pt_id: item.resultado_pt_id,
       estado: 'Rechazado',
       usuario_aprobador_id: 2,
       motivo_rechazo: 'Motivo de rechazo',
       referencia_sap: '',
-    };
+    }));
 
-    console.log('Body a enviar:', body);
-
-    this.postRejectTransfer(body);
+    console.log('body :', bodies);
+    this.postRejectTransfer(bodies);
   }
 
-  postApproveTransfer(body: any): void {
-    this.transferService.postUpdateTranfer([body]).subscribe({
+  postApproveTransfer(bodies: any[]): void {
+    this.transferService.postUpdateTranfer(bodies).subscribe({
       next: (res: ResTransferencia) => {
-        console.log('Aprobado:', res.data);
-        window.alert('Transferencia aprobada con éxito!');
+        console.log('Transferencias aprobadas:', res.data);
+        window.alert('Transferencias aprobadas con éxito!');
         this.getTransfer();
+        this.detallesSeleccionados = [];
       },
       error: (err) => {
         console.log('Error:', err);
-        window.alert('Error al aprobar la transferencia!');
+        window.alert('Error al aprobar las transferencias!');
       },
     });
   }
 
-  postRejectTransfer(body: any): void {
-    this.transferService.postUpdateTranfer([body]).subscribe({
+  postRejectTransfer(bodies: any[]): void {
+    this.transferService.postUpdateTranfer(bodies).subscribe({
       next: (res: ResTransferencia) => {
-        console.log('Rechazado:', res.data);
-        window.alert('Transferencia rechazada con éxito!');
+        console.log('Transferencias rechazadas:', res.data);
+        window.alert('Transferencias rechazadas con éxito!');
         this.getTransfer();
+        this.detallesSeleccionados = [];
       },
       error: (err) => {
         console.log('Error:', err);
-        window.alert('Error al rechazar la transferencia!');
+        window.alert('Error al rechazar las transferencias!');
       },
     });
   }

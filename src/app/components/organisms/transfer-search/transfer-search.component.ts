@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-transfer-search',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './transfer-search.component.html',
   styleUrl: './transfer-search.component.css'
 })
