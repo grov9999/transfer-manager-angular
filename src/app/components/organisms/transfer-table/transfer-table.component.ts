@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -31,6 +31,9 @@ export class TransferTableComponent implements OnInit {
   centroBuscar: string = '';
   montoDesdeBuscar: string = '';
   montoHastaBuscar: string = '';
+  fechaDesdeBuscar: string = '';
+  fechaHastaBuscar: string = '';
+  estadoBuscar: string = '';
 
   pageSize = 5;
   currentPage = 1;
@@ -99,7 +102,27 @@ export class TransferTableComponent implements OnInit {
         this.montoHastaBuscar.trim() === '' ||
         montoTotal <= parseFloat(this.montoHastaBuscar);
 
-      return codigo && centroCosto && montoDesde && montoHasta;
+      const estado =
+        this.estadoBuscar.trim() === '' ||
+        item.estado.toLowerCase() === this.estadoBuscar.toLowerCase();
+
+      const fechaItem = new Date(item.fecha_generacion || DatePipe);
+      const fechaDesde =
+        this.fechaDesdeBuscar.trim() === '' ||
+        fechaItem >= new Date(this.fechaDesdeBuscar);
+      const fechaHasta =
+        this.fechaHastaBuscar.trim() === '' ||
+        fechaItem <= new Date(this.fechaHastaBuscar);
+
+      return (
+        codigo &&
+        centroCosto &&
+        montoDesde &&
+        montoHasta &&
+        fechaDesde &&
+        fechaHasta &&
+        estado
+      );
     });
     this.updatePagination();
   }
@@ -109,22 +132,6 @@ export class TransferTableComponent implements OnInit {
     this.calculateTotalPages();
     this.updatePagedFiltro();
   }
-
-  // deleteTransfer(id: string) {
-  //   if (window.confirm('¿Estás seguro de eliminar la transferencia?')) {
-  //     this.transferService.deleteTransfer(id).subscribe({
-  //       next: (res) => {
-  //         console.log('Transferencia eliminada:', res.data);
-  //         window.alert('Transferencia eliminada con éxito!');
-  //         this.getTransfer();
-  //       },
-  //       error: (err) => {
-  //         console.log('Error:', err);
-  //         window.alert('Error al eliminar la transferencia');
-  //       },
-  //     });
-  //   }
-  // }
 
   detalleSeleccionado: any = null;
   detallesSeleccionados: any[] = [];
